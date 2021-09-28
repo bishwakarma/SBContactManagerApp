@@ -1,0 +1,26 @@
+﻿@model Contact
+@* Using @model directive to specify that the mdoel for this view is a Contact object 
+    because that's what the Add and Edit action methods for a GET request pass to this view.*@
+
+@{
+    //Using the title variable to set the ViewBag.Title property.
+    //This is later used by the layout for view ans as the text within the h2 and h3 tag below.
+    ViewBag.Title = "Delete Contact";
+}
+
+<h2>Are you sure you want to delete the contact details!</h2>
+<h3>@Model.FirstName (@Model.Phone)</h3>
+
+<!--Using the tag helper asp-action so that the form posts ot the Edit() action of the current Contact Controller-->
+<form asp-action="Delete" method="post">
+    <!--Hidden field to store the ContactId-->
+    <input type="hidden" asp-for="ContactId" />
+
+    <!--Delete button to POST the form to the Edit() action method when clicked.
+        -->
+    <button type="submit" class="btn btn-primary">Delete</button>
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Cancel</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Cancel</a>
+
+</form>

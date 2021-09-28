@@ -1,0 +1,41 @@
+﻿@model List<Contact>        
+@*This view begins by using the @model directive to specify that the model for this view is a collection of the contact objects
+    which is passed to this view by the Index() method in the HomeController.cs class*@
+@{
+    ViewBag.Title="Contact Lists";
+}
+
+<h2>Contact Lists</h2>
+
+<!--The HTML of this view displays the table of a contact data
+    Above the table there will be a link requests for Add() action method to add contact-->
+<a asp-controller="Contact" asp-action="Add">Add New Contact</a>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach ( var contact in Model)
+            {
+        <tr>
+            <td>@contact.FirstName</td>
+            <td>@contact.LastName</td>
+            <td>@contact.Phone</td>
+            <td>@contact.Email</td>
+            <td>@contact.Category.Name</td>
+            <td>
+                <a asp-controller="Contact" asp-action="Edit" asp-route-id="@contact.ContactId" asp-route-slug="@contact.Slug">Edit</a>
+                |
+                <a asp-controller="Contact" asp-action="Delete" asp-route-id="@contact.ContactId" asp-route-slug="@contact.Slug">Delete</a>
+            </td>
+        </tr>
+            }
+    </tbody>
+</table>

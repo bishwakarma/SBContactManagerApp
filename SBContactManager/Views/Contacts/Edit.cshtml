@@ -1,0 +1,66 @@
+﻿@model Contact
+
+@* Using @model directive to specify that the mdoel for this view is a Contact object 
+    because that's what the Add and Edit action methods for a GET request pass to this view.*@
+
+@{
+    //Within this Razor code block, a string variable named title is used to store the value of the ViewBag.Action property followed by the space and a Contact.
+    //Hence, creating the title variable tof Add Contact for the Add() Action and Edit Contact for the Edit() action.
+    string title = ViewBag.Action + "Contact";
+
+    //Using the title variable to set the ViewBag.Title property. This is later used by the layout for view ans as the text within the H2 tag below.
+    ViewBag.Title = title;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<!--Using the tag helper asp-action so that the form posts ot the Edit() action of the current Contact Controller-->
+<form asp-action="Edit" method="post">
+    <!--Displaying any data validation message-->
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <!--Below are the html code to display labels and text boxes for First Name, Last Name, Phone, Email and Category-->
+    <div class="form-group">
+        <label asp-for="FirstName">First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName">Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Phone">Phone Number</label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <!--//Code to display relative data to the Add and Edit Pages.-->
+    <div class="form-group">
+        <label asp-for="CategoryId">Category</label>
+
+        <!--Select element below od linked to the CategoryId PROPERTY OF THE MODEL. 
+            The Category drop-down of the on the Edit Contact page selects the Category of the selective contacts. 
+            Dropdown displays the first option on the list, "Select a Category" by default-->
+
+        <select asp-for="CategoryId" class="form-control">
+            <option value="">Sekect a Category</option>
+            @foreach (Category c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryId.">@c.Name</option>
+            }
+        </select>
+    </div>
+    <!--Hidden field to store the ContactId-->
+    <input type="hidden" asp-for="ContactId" />
+
+    <!--Add button to POST the form to the Edit() action method when clicked.
+        The text for this button is the value of the Viewbag.Action property.
+        Hence, this button displays the option to Add it Edit-->
+    <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
+
+    <!--Button to cancel the operation and take the client back to the index home page-->
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Cancel</a>
+</form>
