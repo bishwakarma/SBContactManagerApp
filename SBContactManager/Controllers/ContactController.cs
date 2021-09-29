@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿    using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SBContactManager.Models;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,24 @@ namespace SBContactManager.Controllers
         public ContactController(ContactContext ctx)
         {
             context = ctx;
+        }
+
+        /// <summary>
+        /// Detail() is an action method that uses a parameter named id to get the Contact object that corresponds to the id from the database.
+        /// Database here is a list of contacts in the context
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IActionResult Detail(int id)
+        {
+            //id are the unique identifiers.
+            //id is only going to be returned once.
+            //If the user enters the same id the value will be auto set to default value of null.
+            //Passing the list of Contact object to the View for a display.
+            var contact = context.Contacts
+                .Include(c => c.Category)   
+                .FirstOrDefault(c => c.CategoryId == id); 
+            return View(contact);
         }
 
         //NOTE: The ContactController has 3 action methods. Add(), Edit() and Delete()
@@ -48,7 +67,9 @@ namespace SBContactManager.Controllers
 
             //Code to display relative data to the Add and Edit Pages.
             ViewBag.Categories = context.Categories.OrderBy(c => c.Name).ToList();
-
+            var contact = context.Contacts
+                          .Include(c => c.Category)  
+                          .FirstOrDefault(c => c.CategoryId == id); 
             //Pass the Contact object to the view.
             //To be able to use the same view as Edit option both the Edit() and Add() actions passes Edit as the first argument to the view. 
             return View("Edit", new Contact());
@@ -59,23 +80,29 @@ namespace SBContactManager.Controllers
         [HttpPost]
         public IActionResult Edit(Contact contact)
         {
+            //If the value is 0, it is a new Contact.
+            string action = (contact.ContactId == 0) ? "Add" : "Edit";
             if (ModelState.IsValid)
             {
-                //If the value is 0, it is a new Contact.
-                if (contact.ContactId == 0)
+                if (action == "Add") {
+                    //Middleware to add datetime by the database.
+                    contact.DateAdded = DateTime.Now;
                     //If the contact is new the code below passes the value to the Add() method of the Contact property.
                     context.Contacts.Add(contact);
-                else
+                }
+                else //If the action is Edit then, 
+                {
                     //If the contact is existing one then the code rejects the user back to the Index() action method of the
                     //HomeController.cs class to display the Home View.
                     context.Contacts.Update(contact);
+                }
                 context.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
             //If the Client does not enter a valid data for the model, below is the code to reset the Action property of the viewBag to Add or Edit.
             else
             {
-                ViewBag.Action = (contact.ContactId == 0) ? "Add": "Edit";
+                ViewBag.Action = action;
 
                 //Code to display relative data to the Add and Edit Pages.
                 ViewBag.Categories = context.Categories.OrderBy(c => c.Name).ToList();
@@ -90,7 +117,9 @@ namespace SBContactManager.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var contact = context.Contacts.Find(id);
+            var contact = context.Contacts
+                            .Include(c => c.Category)
+                            .FirstOrDefault(c => c.CategoryId == id);
             //receive the Contact object from the contact database using Id parameter and passing to view for a display.
             return View(contact);
         }
@@ -105,28 +134,6 @@ namespace SBContactManager.Controllers
             context.SaveChanges();
             //Return user back to the Index() page.
             return RedirectToAction("Index", "Home");
-        }
-        /// <summary>
-        /// Detail() is an action method that uses a parameter named id to get the Contact object that corresponds to the id from the DB.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public IActionResult Detail (string id)
-        {
-            Contact contact = DB.GetContact(id);
-            //Passing the list of Contact object to the View for a display.
-            return View(contact);
-        }
-        /// <summary>
-        /// List() action method starts by getting the model, which is a list of Contact objects from the DB.
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult List()
-        {
-            List<Contact> contacts = DB.GetContacts();
-            //Passing the list of Contact object to the View for a display.
-            return View(contacts);
-
         }
     }
 }

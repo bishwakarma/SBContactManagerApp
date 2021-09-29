@@ -20,6 +20,7 @@ namespace SBContactManager.Controllers
         //The constructor works because of the dependency injection code in the Startup.cs file.
         public HomeController(ContactContext ctx)
         {
+            //Link on a homepage
             context = ctx;
 
         }
@@ -33,7 +34,8 @@ namespace SBContactManager.Controllers
         {
             //Sorting the objects alphabetically by contact first name.
             //Using Include() method to add the related entiry according to the logic of the => expression.
-            var contacts = context.Contacts.Include(C => C.Category)
+            var contacts = context.Contacts
+                            .Include(c => c.Category)
                             .OrderBy(c => c.FirstName).ToList();
             return View(contacts);
         }

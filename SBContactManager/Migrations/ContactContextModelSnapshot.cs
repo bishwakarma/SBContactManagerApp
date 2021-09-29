@@ -21,8 +21,10 @@ namespace SBContactManager.Migrations
 
             modelBuilder.Entity("SBContactManager.Models.Category", b =>
                 {
-                    b.Property<string>("CategoryId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -34,18 +36,23 @@ namespace SBContactManager.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = "W",
+                            CategoryId = 1,
                             Name = "Work"
                         },
                         new
                         {
-                            CategoryId = "F",
+                            CategoryId = 2,
                             Name = "Friend"
                         },
                         new
                         {
-                            CategoryId = "R",
+                            CategoryId = 3,
                             Name = "Relative"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            Name = "Other"
                         });
                 });
 
@@ -56,9 +63,11 @@ namespace SBContactManager.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -72,9 +81,12 @@ namespace SBContactManager.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("Phone")
+                    b.Property<string>("Organization")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("bigint");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContactId");
 
@@ -86,29 +98,32 @@ namespace SBContactManager.Migrations
                         new
                         {
                             ContactId = 1,
-                            CategoryId = "W",
+                            CategoryId = 1,
+                            DateAdded = new DateTime(2021, 9, 29, 13, 12, 45, 542, DateTimeKind.Local).AddTicks(7048),
                             Email = "bradpitt@hotmail.com",
                             FirstName = "Brad",
                             LastName = "Pitt",
-                            Phone = 5559876543L
+                            Phone = "555-987-6543"
                         },
                         new
                         {
                             ContactId = 2,
-                            CategoryId = "F",
+                            CategoryId = 2,
+                            DateAdded = new DateTime(2021, 9, 29, 13, 12, 45, 547, DateTimeKind.Local).AddTicks(8482),
                             Email = "David@hotmail.com",
                             FirstName = "David",
                             LastName = "Becham",
-                            Phone = 5554567890L
+                            Phone = "555-456-7890"
                         },
                         new
                         {
                             ContactId = 3,
-                            CategoryId = "R",
+                            CategoryId = 3,
+                            DateAdded = new DateTime(2021, 9, 29, 13, 12, 45, 547, DateTimeKind.Local).AddTicks(8539),
                             Email = "Christiano@hotmail.com",
                             FirstName = "Christiano",
                             LastName = "Ronaldo",
-                            Phone = 5551234597L
+                            Phone = "555-123-4597"
                         });
                 });
 

@@ -1,16 +1,17 @@
-﻿@model List<Contact>        
+﻿@model IEnumerable<Contact>      
 @*This view begins by using the @model directive to specify that the model for this view is a collection of the contact objects
     which is passed to this view by the Index() method in the HomeController.cs class*@
 @{
-    ViewBag.Title="Contact Lists";
+    ViewBag.Title="Contact Manager";
 }
 
-<h2>Contact Lists</h2>
 
 <!--The HTML of this view displays the table of a contact data
     Above the table there will be a link requests for Add() action method to add contact-->
-<a asp-controller="Contact" asp-action="Add">Add New Contact</a>
-<table class="table table-bordered table-striped">
+<a asp-action="Add" asp-controller="Contact"
+   class="ml-2">Add New Contact</a>
+
+<table class="table mt-2">
     <thead>
         <tr>
             <th>First Name</th>
@@ -22,19 +23,26 @@
     </thead>
 
     <tbody>
-        @foreach ( var contact in Model)
+        @foreach ( Contact contact in Model)    //Using Model to access the data passed in to this view from line 1.
             {
         <tr>
-            <td>@contact.FirstName</td>
-            <td>@contact.LastName</td>
+            <!--Go to Details action in the Contact Controller using id as the Reoute value to see the contact-->
+            <td>
+                <a asp-action="Details" asp-controller="Contact" asp-route-id="@contact.ContactId" asp-route-slug="@contact.Slug">
+                    @contact.FirstName
+                </a>
+            </td>
+
+            <td>
+                <!--Go to Details action in the Contact Controller using id as the Reoute value to see the contact-->
+                <a asp-action="Details" asp-controller="Contact" asp-route-id="@contact.ContactId" asp-route-slug="@contact.Slug">
+                    @contact.LastName
+                </a>
+            </td>
+
             <td>@contact.Phone</td>
             <td>@contact.Email</td>
             <td>@contact.Category.Name</td>
-            <td>
-                <a asp-controller="Contact" asp-action="Edit" asp-route-id="@contact.ContactId" asp-route-slug="@contact.Slug">Edit</a>
-                |
-                <a asp-controller="Contact" asp-action="Delete" asp-route-id="@contact.ContactId" asp-route-slug="@contact.Slug">Delete</a>
-            </td>
         </tr>
             }
     </tbody>

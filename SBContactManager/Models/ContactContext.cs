@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace SBContactManager.Models
 {
     /// <summary>
+    /// DB Class
     /// Contacts is a class that inherits DbContext base class.
     /// DbContext class is the Primary Class for communicating with a Base Class.
     /// </summary>
@@ -31,14 +32,14 @@ namespace SBContactManager.Models
         //Using OnModelCreating() method of DbContext class to override to configure my context.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
             //The ModelBuilder object provides an Entity<Contact> methods that returns an EntityTypeBuilder<Contact> object.
             //EntityTypeBuilder<Contact> object provides a HasData() method that accepts an array of entity/Contact objects.
 
             modelBuilder.Entity<Category>().HasData(
-                new Category { CategoryId = "W", Name = "Work" },
-                new Category { CategoryId = "F", Name = "Friend" },
-                new Category { CategoryId = "R", Name = "Relative" }
+                new Category { CategoryId = 1, Name = "Work" },
+                new Category { CategoryId = 2, Name = "Friend" },
+                new Category { CategoryId = 3, Name = "Relative" },
+                new Category { CategoryId = 4, Name = "Other" }
                 );
 
             modelBuilder.Entity<Contact>().HasData(
@@ -47,27 +48,30 @@ namespace SBContactManager.Models
                         ContactId = 1,
                         FirstName = "Brad",
                         LastName = "Pitt",
-                        Phone = 5559876543,
+                        Phone = "555-987-6543",
                         Email = "bradpitt@hotmail.com",
-                        CategoryId = "W"
+                        CategoryId = 1,
+                        DateAdded = DateTime.Now
                     },
                     new Contact
                     {
                         ContactId = 2,
                         FirstName = "David",
                         LastName = "Becham",
-                        Phone = 5554567890,
+                        Phone = "555-456-7890",
                         Email = "David@hotmail.com",
-                        CategoryId = "F"
+                        CategoryId = 2,
+                        DateAdded = DateTime.Now
                     },
                     new Contact
                     {
                         ContactId = 3,
                         FirstName = "Christiano",
                         LastName = "Ronaldo",
-                        Phone = 5551234597,
+                        Phone = "555-123-4597",
                         Email = "Christiano@hotmail.com",
-                        CategoryId = "R"
+                        CategoryId = 3,
+                        DateAdded = DateTime.Now
                     }
                 );
         }
